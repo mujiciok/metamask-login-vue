@@ -1,17 +1,20 @@
 <template>
   <Header/>
   <HelloWorld msg="NFT"/>
+  <SendEthForm/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import Header from "@/components/Header";
+import HelloWorld from '@/components/HelloWorld.vue'
+import Header from '@/components/Header'
+import SendEthForm from '@/components/SendEthForm'
 
 export default {
   name: 'App',
   components: {
     Header,
     HelloWorld,
+    SendEthForm,
   }
 }
 </script>
