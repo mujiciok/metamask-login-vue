@@ -9,8 +9,8 @@
       </span>
     </div>
     <div class="item">
-      <font-awesome-icon icon="sign-in-alt" v-if="getWallet()" @click="signOut"/>
-      <font-awesome-icon icon="sign-out-alt" v-if="!getWallet()" @click="signIn"/>
+      <font-awesome-icon icon="sign-in-alt" v-if="getWallet" @click="signOut"/>
+      <font-awesome-icon icon="sign-out-alt" v-if="!getWallet" @click="signIn"/>
     </div>
   </div>
 </template>
@@ -43,16 +43,17 @@ export default {
       getBalance: 'auth/getBalance',
     }),
     getFormattedBalance() {
-      if (!this.getBalance()) {
+      if (!this.getBalance) {
         return null
       }
-      let formattedBalance = ethers.utils.formatEther(this.getBalance())
+
+      let formattedBalance = ethers.utils.formatEther(this.getBalance)
       formattedBalance = parseFloat(formattedBalance.toString()).toFixed(5)
 
       return formattedBalance
     },
     getFormattedWallet() {
-      let wallet = this.getWallet()
+      let wallet = this.getWallet
 
       return wallet ? wallet.replace(wallet.substr(4,34), '...') : null
     }

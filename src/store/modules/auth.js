@@ -9,9 +9,9 @@ const getDefaultState = () => ({
 const state = getDefaultState()
 
 const getters = {
-  getProvider: (state) => () => state.provider,
-  getWallet: (state) => () => state.wallet,
-  getBalance: (state) => () => state.balance,
+  getProvider: (state) => () => state.provider, // method-style access to provider as it is an object
+  getWallet: (state) => state.wallet,
+  getBalance: (state) => state.balance,
 }
 
 const actions = {
@@ -41,7 +41,7 @@ const actions = {
 
     // @TODO listener on account change - find appropriate place for this code
     window.ethereum.on('accountsChanged', async (accounts) => {
-      const oldWallet = state.getters.getWallet()
+      const oldWallet = state.getters.getWallet
       const newWallet = accounts[0]
       if (oldWallet !== newWallet) {
         console.log('wallet changed', oldWallet, '>>>', newWallet)

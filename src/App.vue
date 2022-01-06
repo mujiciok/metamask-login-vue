@@ -3,7 +3,7 @@
     <Header/>
     <v-main>
       <HelloWorld msg="NFT"/>
-      <SendEthForm v-if="getWallet()"/>
+      <SendEthForm v-if="getWallet"/>
     </v-main>
   </v-app>
 </template>
