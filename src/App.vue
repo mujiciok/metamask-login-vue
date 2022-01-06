@@ -1,13 +1,18 @@
 <template>
-  <Header/>
-  <HelloWorld msg="NFT"/>
-  <SendEthForm/>
+  <v-app>
+    <Header/>
+    <v-main>
+      <HelloWorld msg="NFT"/>
+      <SendEthForm v-if="getWallet()"/>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
 import HelloWorld from '@/components/HelloWorld.vue'
 import Header from '@/components/Header'
 import SendEthForm from '@/components/SendEthForm'
+import {mapGetters} from "vuex";
 
 export default {
   name: 'App',
@@ -15,7 +20,15 @@ export default {
     Header,
     HelloWorld,
     SendEthForm,
-  }
+  },
+  data: () => ({
+    //
+  }),
+  computed: {
+    ...mapGetters({
+      getWallet: 'auth/getWallet',
+    }),
+  },
 }
 </script>
 

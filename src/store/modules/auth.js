@@ -1,10 +1,12 @@
 import { ethers } from 'ethers'
 
-const state = () => ({
+const getDefaultState = () => ({
   provider: null,
   wallet: null,
   balance: null,
 })
+
+const state = getDefaultState()
 
 const getters = {
   getProvider: (state) => () => state.provider,
@@ -16,38 +18,39 @@ const actions = {
   async login(state) {
     const requestAccounts = () => window.ethereum.request({ method: 'eth_requestAccounts' })
       .then(async result => {
-        let provider = new ethers.providers.Web3Provider(window.ethereum)
+        // @TODO without specifying network as 'any' will get the error:
+        // 'get' on proxy: property '_network' is a read-only and non-configurable data property...
+        let provider = new ethers.providers.Web3Provider(window.ethereum, 'any')
         let wallet = result[0]
         let balance = await provider.getBalance(wallet)
+        console.log('auth', provider, wallet, balance)
 
-        state.commit('setAuthData', {
+        return {
           provider,
           wallet,
           balance
-        })
+        }
       })
       .catch(error => {
-        console.log(error.message);
+        console.log('auth err', error.message);
       })
 
-    requestAccounts()
+    const authData = await requestAccounts()
 
-    window.ethereum.on('accountsChanged', function (accounts) {
+    state.commit('setAuthData', authData)
+
+    // @TODO listener on account change - find appropriate place for this code
+    window.ethereum.on('accountsChanged', async (accounts) => {
       const oldWallet = state.getters.getWallet()
       const newWallet = accounts[0]
-      console.log(oldWallet, newWallet)
       if (oldWallet !== newWallet) {
-        console.log('wallet changed')
-        requestAccounts()
+        console.log('wallet changed', oldWallet, '>>>', newWallet)
+        state.commit('setAuthData', await requestAccounts())
       }
     })
   },
   logout(state) {
-    state.commit('setAuthData', {
-      provider: null,
-      wallet: null,
-      balance: null,
-    })
+    state.commit('setAuthData', Object.assign(state, getDefaultState()))
   }
 }
 
@@ -56,9 +59,9 @@ const mutations = {
     state.provider = provider ? provider : null
   },
   setAuthData(state, payload) {
-    state.provider = payload.provider
-    state.wallet = payload.wallet
-    state.balance = payload.balance
+    state.provider = payload?.provider
+    state.wallet = payload?.wallet
+    state.balance = payload?.balance
   }
 }
 

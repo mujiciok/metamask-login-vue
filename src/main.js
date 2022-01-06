@@ -2,17 +2,14 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import FontAwesomeIcon from '@/plugins/fontAwesome'
 import store from './store'
+import vuetify from './plugins/vuetify'
+import { loadFonts } from './plugins/webfontloader'
 
-// const Web3 = require('web3')
-// const VueWeb3 = require('vue-web3')
-
+loadFonts().then()
 
 const app = createApp(App)
   .component("font-awesome-icon", FontAwesomeIcon)
 
 app.use(store)
+app.use(vuetify)
 app.mount('#app')
-
-// app.use(store)
-
-// Vue.use(VueWeb3, { web3: new Web3(window.web3.currentProvider) })

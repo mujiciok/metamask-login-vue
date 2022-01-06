@@ -29,6 +29,7 @@ export default {
   updated() {
     console.log('updated')
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    // @TODO observer for network change - find appropriate place for this code
     provider.on("network", (newNetwork, oldNetwork) => {
       if (oldNetwork) {
         console.log('network changed')
@@ -42,7 +43,13 @@ export default {
       getBalance: 'auth/getBalance',
     }),
     getFormattedBalance() {
-      return this.getBalance() ? ethers.utils.formatEther(this.getBalance()) : null
+      if (!this.getBalance()) {
+        return null
+      }
+      let formattedBalance = ethers.utils.formatEther(this.getBalance())
+      formattedBalance = parseFloat(formattedBalance.toString()).toFixed(5)
+
+      return formattedBalance
     },
     getFormattedWallet() {
       let wallet = this.getWallet()
@@ -50,6 +57,10 @@ export default {
       return wallet ? wallet.replace(wallet.substr(4,34), '...') : null
     }
   },
+  // @TODO update balance after transaction
+  // watch: {
+  //   balance: 'getBalance'
+  // },
   methods: {
     ...mapActions({
       login: 'auth/login',
