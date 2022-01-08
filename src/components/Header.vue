@@ -36,6 +36,16 @@ export default {
         window.location.reload();
       }
     });
+
+    // @TODO observer for account change - find appropriate place for this code
+    window.ethereum.on('accountsChanged', async (accounts) => {
+      const oldWallet = this.getWallet
+      const newWallet = accounts[0]
+      if (oldWallet !== newWallet) {
+        console.log('wallet changed', oldWallet, '>>>', newWallet)
+        this.requestAccounts()
+      }
+    })
   },
   computed: {
     ...mapGetters({
@@ -66,6 +76,7 @@ export default {
     ...mapActions({
       login: 'auth/login',
       logout: 'auth/logout',
+      requestAccounts: 'auth/requestAccounts',
     }),
     async signIn() {
       if (window.ethereum && window.ethereum.isMetaMask) {
